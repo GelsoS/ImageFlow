@@ -60,6 +60,8 @@ function App() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+    localStorage.clear()
+    //window.location.reload()
   }
 
   if (loading) {
