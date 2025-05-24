@@ -1,0 +1,193 @@
+.media-gallery {
+  margin-top: 1rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.media-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.media-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.media-card.marked-as-used {
+  border: 2px solid #4caf50;
+  background-color: #f1f8e9;
+}
+
+.media-container {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.media-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.media-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-card:hover .media-container img {
+  transform: scale(1.05);
+}
+
+.download-badge,
+.used-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: #4caf50;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.used-badge {
+  top: 8px;
+  left: 8px;
+  background-color: #ff9800;
+}
+
+.media-info {
+  padding: 1rem;
+}
+
+.media-info h4 {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.media-info p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.media-info small {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.media-actions {
+  display: flex;
+  padding: 0 1rem 1rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.download-btn,
+.mark-used-btn,
+.edit-btn,
+.delete-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  border: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.download-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.download-btn:hover {
+  background-color: #2980b9;
+}
+
+.mark-used-btn {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.mark-used-btn.marked {
+  background-color: #e67e22;
+}
+
+.mark-used-btn:hover {
+  background-color: #7f8c8d;
+}
+
+.mark-used-btn.marked:hover {
+  background-color: #d35400;
+}
+
+.edit-btn {
+  background-color: #f39c12;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #d68910;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.no-media {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .media-actions {
+    flex-direction: column;
+  }
+
+  .download-btn,
+  .mark-used-btn,
+  .edit-btn,
+  .delete-btn {
+    flex: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}

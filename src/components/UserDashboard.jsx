@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from "react"
 import { supabase } from "../supabaseClient"
-import ImageGallery from "./ImageGallery"
+import MediaGallery from "./MediaGallery"
 import "../styles/Dashboard.css"
 
 function UserDashboard({ user }) {
   const [directories, setDirectories] = useState([])
   const [currentDirectory, setCurrentDirectory] = useState(null)
   const [images, setImages] = useState([])
+  const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("images")
+  const [expandedDirectories, setExpandedDirectories] = useState(new Set())
 
   useEffect(() => {
     fetchDirectories()
@@ -18,8 +21,10 @@ function UserDashboard({ user }) {
   useEffect(() => {
     if (currentDirectory) {
       fetchImages(currentDirectory.id)
+      fetchVideos(currentDirectory.id)
     } else {
       setImages([])
+      setVideos([])
     }
   }, [currentDirectory])
 
@@ -42,7 +47,6 @@ function UserDashboard({ user }) {
 
   async function fetchImages(directoryId) {
     try {
-      setLoading(true)
       const { data, error } = await supabase
         .from("images")
         .select("*")
@@ -56,27 +60,81 @@ function UserDashboard({ user }) {
       setImages(data || [])
     } catch (error) {
       console.error("Erro ao buscar imagens:", error.message)
-    } finally {
-      setLoading(false)
     }
   }
+
+  async function fetchVideos(directoryId) {
+    try {
+      const { data, error } = await supabase
+        .from("videos")
+        .select("*")
+        .eq("directory_id", directoryId)
+        .order("created_at", { ascending: false })
+
+      if (error) {
+        throw error
+      }
+
+      setVideos(data || [])
+    } catch (error) {
+      console.error("Erro ao buscar vídeos:", error.message)
+    }
+  }
+
+  function toggleDirectory(dirId) {
+    const newExpanded = new Set(expandedDirectories)
+    if (newExpanded.has(dirId)) {
+      newExpanded.delete(dirId)
+    } else {
+      newExpanded.add(dirId)
+    }
+    setExpandedDirectories(newExpanded)
+  }
+
+  function buildDirectoryTree(dirs, parentId = null) {
+    return dirs
+      .filter((dir) => dir.parent_id === parentId)
+      .map((dir) => ({
+        ...dir,
+        children: buildDirectoryTree(dirs, dir.id),
+      }))
+  }
+
+  function renderDirectoryTree(tree, level = 0) {
+    return tree.map((dir) => (
+      <div key={dir.id} className="directory-tree-item">
+        <div className="directory-item-container" style={{ marginLeft: `${level * 20}px` }}>
+          {dir.children.length > 0 && (
+            <button className="expand-btn" onClick={() => toggleDirectory(dir.id)}>
+              {expandedDirectories.has(dir.id) ? "▼" : "▶"}
+            </button>
+          )}
+          <div
+            className={`directory-item ${currentDirectory?.id === dir.id ? "active" : ""}`}
+            onClick={() => setCurrentDirectory(dir)}
+          >
+            📁 {dir.name}
+          </div>
+        </div>
+        {expandedDirectories.has(dir.id) && dir.children.length > 0 && (
+          <div className="directory-children">{renderDirectoryTree(dir.children, level + 1)}</div>
+        )}
+      </div>
+    ))
+  }
+
+  const directoryTree = buildDirectoryTree(directories)
 
   return (
     <div className="user-dashboard">
       <div className="dashboard-sidebar">
         <h3>Diretórios</h3>
         <div className="directory-list">
-          {directories.map((dir) => (
-            <div
-              key={dir.id}
-              className={`directory-item ${currentDirectory?.id === dir.id ? "active" : ""}`}
-              onClick={() => setCurrentDirectory(dir)}
-            >
-              {dir.name}
-            </div>
-          ))}
-
-          {directories.length === 0 && <p className="no-directories">Nenhum diretório disponível</p>}
+          {directoryTree.length > 0 ? (
+            renderDirectoryTree(directoryTree)
+          ) : (
+            <p className="no-directories">Nenhum diretório disponível</p>
+          )}
         </div>
       </div>
 
@@ -84,11 +142,32 @@ function UserDashboard({ user }) {
         {currentDirectory ? (
           <>
             <h2>Diretório: {currentDirectory.name}</h2>
-            <ImageGallery images={images} isAdmin={false} />
+
+            <div className="media-tabs">
+              <button
+                className={`tab-btn ${activeTab === "images" ? "active" : ""}`}
+                onClick={() => setActiveTab("images")}
+              >
+                Imagens ({images.length})
+              </button>
+              <button
+                className={`tab-btn ${activeTab === "videos" ? "active" : ""}`}
+                onClick={() => setActiveTab("videos")}
+              >
+                Vídeos ({videos.length})
+              </button>
+            </div>
+
+            <MediaGallery
+              media={activeTab === "images" ? images : videos}
+              mediaType={activeTab}
+              isAdmin={false}
+              userId={user.id}
+            />
           </>
         ) : (
           <div className="select-directory-message">
-            <h2>Selecione um diretório para visualizar imagens</h2>
+            <h2>Selecione um diretório para visualizar mídias</h2>
           </div>
         )}
       </div>

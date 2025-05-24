@@ -3,15 +3,17 @@
 import { useState, useEffect } from "react"
 import { supabase } from "../supabaseClient"
 import DirectoryManager from "./DirectoryManager"
-import ImageUploader from "./ImageUploader"
-import ImageGallery from "./ImageGallery"
+import MediaUploader from "./MediaUploader"
+import MediaGallery from "./MediaGallery"
 import "../styles/Dashboard.css"
 
 function AdminDashboard({ user }) {
   const [directories, setDirectories] = useState([])
   const [currentDirectory, setCurrentDirectory] = useState(null)
   const [images, setImages] = useState([])
+  const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("images")
 
   useEffect(() => {
     fetchDirectories()
@@ -20,8 +22,10 @@ function AdminDashboard({ user }) {
   useEffect(() => {
     if (currentDirectory) {
       fetchImages(currentDirectory.id)
+      fetchVideos(currentDirectory.id)
     } else {
       setImages([])
+      setVideos([])
     }
   }, [currentDirectory])
 
@@ -44,7 +48,6 @@ function AdminDashboard({ user }) {
 
   async function fetchImages(directoryId) {
     try {
-      setLoading(true)
       const { data, error } = await supabase
         .from("images")
         .select("*")
@@ -58,8 +61,24 @@ function AdminDashboard({ user }) {
       setImages(data || [])
     } catch (error) {
       console.error("Erro ao buscar imagens:", error.message)
-    } finally {
-      setLoading(false)
+    }
+  }
+
+  async function fetchVideos(directoryId) {
+    try {
+      const { data, error } = await supabase
+        .from("videos")
+        .select("*")
+        .eq("directory_id", directoryId)
+        .order("created_at", { ascending: false })
+
+      if (error) {
+        throw error
+      }
+
+      setVideos(data || [])
+    } catch (error) {
+      console.error("Erro ao buscar vídeos:", error.message)
     }
   }
 
@@ -74,12 +93,20 @@ function AdminDashboard({ user }) {
     }
   }
 
-  async function handleImageUploaded(newImage) {
-    setImages([newImage, ...images])
+  async function handleMediaUploaded(newMedia, type) {
+    if (type === "image") {
+      setImages([newMedia, ...images])
+    } else if (type === "video") {
+      setVideos([newMedia, ...videos])
+    }
   }
 
-  async function handleImageDeleted(id) {
-    setImages(images.filter((img) => img.id !== id))
+  async function handleMediaDeleted(id, type) {
+    if (type === "image") {
+      setImages(images.filter((img) => img.id !== id))
+    } else if (type === "video") {
+      setVideos(videos.filter((vid) => vid.id !== id))
+    }
   }
 
   return (
@@ -98,12 +125,34 @@ function AdminDashboard({ user }) {
         {currentDirectory ? (
           <>
             <h2>Diretório: {currentDirectory.name}</h2>
-            <ImageUploader directoryId={currentDirectory.id} onImageUploaded={handleImageUploaded} />
-            <ImageGallery images={images} isAdmin={true} onImageDeleted={handleImageDeleted} />
+            <MediaUploader directoryId={currentDirectory.id} onMediaUploaded={handleMediaUploaded} />
+
+            <div className="media-tabs">
+              <button
+                className={`tab-btn ${activeTab === "images" ? "active" : ""}`}
+                onClick={() => setActiveTab("images")}
+              >
+                Imagens ({images.length})
+              </button>
+              <button
+                className={`tab-btn ${activeTab === "videos" ? "active" : ""}`}
+                onClick={() => setActiveTab("videos")}
+              >
+                Vídeos ({videos.length})
+              </button>
+            </div>
+
+            <MediaGallery
+              media={activeTab === "images" ? images : videos}
+              mediaType={activeTab}
+              isAdmin={true}
+              onMediaDeleted={handleMediaDeleted}
+              userId={user.id}
+            />
           </>
         ) : (
           <div className="select-directory-message">
-            <h2>Selecione ou crie um diretório para gerenciar imagens</h2>
+            <h2>Selecione ou crie um diretório para gerenciar mídias</h2>
           </div>
         )}
       </div>
