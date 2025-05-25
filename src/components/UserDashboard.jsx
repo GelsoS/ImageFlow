@@ -126,7 +126,7 @@ function UserDashboard({ user }) {
   const directoryTree = buildDirectoryTree(directories)
 
   return (
-    <div className="user-dashboard">
+    <div className="dashboard-layout">
       <div className="dashboard-sidebar">
         <h3>Diretórios</h3>
         <div className="directory-list">
@@ -138,10 +138,12 @@ function UserDashboard({ user }) {
         </div>
       </div>
 
-      <div className="dashboard-content">
+      <div className="dashboard-main-content">
         {currentDirectory ? (
           <>
-            <h2>Diretório: {currentDirectory.name}</h2>
+            <div className="content-header">
+              <h2>Diretório: {currentDirectory.name}</h2>
+            </div>
 
             <div className="media-tabs">
               <button
@@ -158,12 +160,14 @@ function UserDashboard({ user }) {
               </button>
             </div>
 
-            <MediaGallery
-              media={activeTab === "images" ? images : videos}
-              mediaType={activeTab}
-              isAdmin={false}
-              userId={user.id}
-            />
+            <div className="media-content">
+              <MediaGallery
+                media={activeTab === "images" ? images : videos}
+                mediaType={activeTab}
+                isAdmin={false}
+                userId={user.id}
+              />
+            </div>
           </>
         ) : (
           <div className="select-directory-message">
