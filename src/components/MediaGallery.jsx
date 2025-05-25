@@ -87,20 +87,46 @@ function MediaGallery({ media, mediaType, isAdmin, onMediaDeleted, userId }) {
       setLoading(true)
 
       const bucketName = mediaType === "images" ? "images" : "videos"
+      const tableName = mediaType === "images" ? "images" : "videos"
 
-      // Excluir o arquivo do storage
+      console.log("Iniciando exclusão:", {
+        mediaItem: mediaItem.id,
+        bucketName,
+        tableName,
+        storagePath: mediaItem.storage_path,
+      })
+
+      // 1. Primeiro excluir o arquivo do storage
+      console.log(bucketName,'---',mediaItem.storage_path);
+      
       const { error: storageError } = await supabase.storage.from(bucketName).remove([mediaItem.storage_path])
 
-      if (storageError) throw storageError
+      if (storageError) {
+        console.error("Erro ao excluir do storage:", storageError)
+        // Continuar mesmo se houver erro no storage (arquivo pode não existir)
+      }
 
-      // Excluir o registro do banco de dados
-      const tableName = mediaType === "images" ? "images" : "videos"
+      // 2. Depois excluir o registro do banco de dados
+      console.log(tableName,'---',mediaItem.id);
+      
       const { error: dbError } = await supabase.from(tableName).delete().eq("id", mediaItem.id)
 
-      if (dbError) throw dbError
+      if (dbError) {
+        console.error("Erro ao excluir do banco:", dbError)
+        throw dbError
+      }
 
-      // Notificar o componente pai
-      onMediaDeleted(mediaItem.id, mediaType.slice(0, -1)) // Remove 's' do final
+      console.log("Exclusão bem-sucedida")
+
+      // 3. Notificar o componente pai para atualizar a lista
+      if (onMediaDeleted) {
+        onMediaDeleted(mediaItem.id, mediaType.slice(0, -1)) // Remove 's' do final
+      }
+
+      // 4. Forçar atualização da página como fallback
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
     } catch (error) {
       console.error("Erro ao excluir mídia:", error.message)
       alert("Erro ao excluir mídia: " + error.message)
@@ -198,7 +224,7 @@ function MediaGallery({ media, mediaType, isAdmin, onMediaDeleted, userId }) {
                     </button>
 
                     <button onClick={() => handleDelete(mediaItem)} disabled={loading} className="delete-btn">
-                      Excluir
+                      {loading ? "Excluindo..." : "Excluir"}
                     </button>
                   </>
                 )}

@@ -2,15 +2,20 @@
 
 import { useState } from "react"
 import { supabase } from "../supabaseClient"
+import UploadProgress from "./UploadProgress"
+import UploadSuccessModal from "./UploadSuccessModal"
 import "../styles/MediaUploader.css"
 
-function MediaUploader({ directoryId, onMediaUploaded }) {
+function MediaUploader({ directoryId, onMediaUploaded, userId }) {
   const [file, setFile] = useState(null)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState(null)
   const [mediaType, setMediaType] = useState("image")
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [uploadedMedia, setUploadedMedia] = useState(null)
 
   function handleFileChange(e) {
     const selectedFile = e.target.files[0]
@@ -34,6 +39,27 @@ function MediaUploader({ directoryId, onMediaUploaded }) {
     }
   }
 
+  async function simulateUploadProgress(file) {
+    const totalSize = file.size
+    let uploadedSize = 0
+
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        // Simular progresso de upload (em produção, você usaria eventos reais do Supabase)
+        const increment = totalSize * 0.1 // 10% por vez
+        uploadedSize = Math.min(uploadedSize + increment, totalSize)
+        const progress = Math.round((uploadedSize / totalSize) * 100)
+
+        setUploadProgress(progress)
+
+        if (progress >= 100) {
+          clearInterval(interval)
+          resolve()
+        }
+      }, 500) // Atualizar a cada 500ms
+    })
+  }
+
   async function handleUpload(e) {
     e.preventDefault()
 
@@ -42,9 +68,32 @@ function MediaUploader({ directoryId, onMediaUploaded }) {
       return
     }
 
+    let progressData = null
+
     try {
       setUploading(true)
       setError(null)
+      setUploadProgress(0)
+
+      // Criar registro de progresso no banco
+      const { data: progressDataResponse } = await supabase
+        .from("upload_progress")
+        .insert([
+          {
+            user_id: userId,
+            file_name: file.name,
+            file_size: file.size,
+            media_type: mediaType,
+            status: "uploading",
+          },
+        ])
+        .select()
+        .single()
+
+      progressData = progressDataResponse
+
+      // Simular progresso de upload
+      await simulateUploadProgress(file)
 
       // Gerar um nome de arquivo único
       const fileExt = file.name.split(".").pop()
@@ -73,10 +122,6 @@ function MediaUploader({ directoryId, onMediaUploaded }) {
         type: file.type,
       }
 
-      // Adicionar duração para vídeos (simulada - em produção você usaria uma biblioteca para extrair metadados)
-      if (mediaType === "video") {
-        mediaData.duration = 0 // Placeholder - implementar extração real de duração
-      }
 
       // Salvar os metadados no banco de dados
       const tableName = mediaType === "image" ? "images" : "videos"
@@ -84,15 +129,35 @@ function MediaUploader({ directoryId, onMediaUploaded }) {
 
       if (dbError) throw dbError
 
+      // Atualizar status do upload para concluído
+      await supabase
+        .from("upload_progress")
+        .update({
+          status: "completed",
+          progress_percentage: 100,
+          uploaded_size: file.size,
+        })
+        .eq("id", progressData.id)
+
       // Limpar o formulário
       setFile(null)
       setTitle("")
       setDescription("")
+      setUploadProgress(0)
+
+      // Mostrar modal de sucesso
+      setUploadedMedia(data)
+      setShowSuccessModal(true)
 
       // Notificar o componente pai
       onMediaUploaded(data, mediaType)
     } catch (error) {
       setError(error.message)
+
+      // Atualizar status do upload para falhou
+      if (progressData?.id) {
+        await supabase.from("upload_progress").update({ status: "failed" }).eq("id", progressData.id)
+      }
     } finally {
       setUploading(false)
     }
@@ -126,6 +191,10 @@ function MediaUploader({ directoryId, onMediaUploaded }) {
       </div>
 
       {error && <div className="error-message">{error}</div>}
+
+      {uploading && (
+        <UploadProgress progress={uploadProgress} fileName={file?.name} fileSize={file?.size} mediaType={mediaType} />
+      )}
 
       <form onSubmit={handleUpload} className="upload-form">
         <div className="form-group">
@@ -173,6 +242,10 @@ function MediaUploader({ directoryId, onMediaUploaded }) {
           {uploading ? "Carregando..." : `Carregar ${mediaType === "image" ? "Imagem" : "Vídeo"}`}
         </button>
       </form>
+
+      {showSuccessModal && uploadedMedia && (
+        <UploadSuccessModal media={uploadedMedia} mediaType={mediaType} onClose={() => setShowSuccessModal(false)} />
+      )}
     </div>
   )
 }

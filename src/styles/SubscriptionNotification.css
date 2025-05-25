@@ -1,0 +1,113 @@
+.subscription-notification {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  padding: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+.subscription-notification.free {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  color: #856404;
+}
+
+.subscription-notification.premium {
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
+}
+
+.subscription-notification.expiring {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  color: #856404;
+}
+
+.subscription-notification.expired {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.notification-text {
+  flex: 1;
+}
+
+.notification-text strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.notification-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.upgrade-btn,
+.renew-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.upgrade-btn:hover,
+.renew-btn:hover {
+  background-color: #2980b9;
+}
+
+.expired .renew-btn {
+  background-color: #e74c3c;
+}
+
+.expired .renew-btn:hover {
+  background-color: #c0392b;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .notification-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .notification-text {
+    order: 1;
+  }
+
+  .upgrade-btn,
+  .renew-btn {
+    order: 2;
+    width: 100%;
+  }
+}

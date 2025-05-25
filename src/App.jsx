@@ -7,12 +7,14 @@ import Login from "./components/Login"
 import Register from "./components/Register"
 import AdminDashboard from "./components/AdminDashboard"
 import UserDashboard from "./components/UserDashboard"
+import PaymentModal from "./components/PaymentModal"
 
 function App() {
   const [session, setSession] = useState(null)
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState("login")
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
 
   useEffect(() => {
     // Verificar sessão atual
@@ -61,7 +63,6 @@ function App() {
   const handleLogout = async () => {
     await supabase.auth.signOut()
     localStorage.clear()
-    //window.location.reload()
   }
 
   if (loading) {
@@ -96,15 +97,33 @@ function App() {
         <h1>Gerenciador de Imagens</h1>
         <div className="user-info">
           <span>Olá, {user?.username || session.user.email}</span>
-          <button onClick={handleLogout} className="logout-btn">
-            Sair
-          </button>
+          <div className="header-buttons">
+            {user?.role === "admin" && (
+              <button onClick={() => setShowPaymentModal(true)} className="billing-btn">
+                💳 Cobrança
+              </button>
+            )}
+            <button onClick={handleLogout} className="logout-btn">
+              Sair
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="app-main">
         {user?.role === "admin" ? <AdminDashboard user={user} /> : <UserDashboard user={user} />}
       </main>
+
+      {showPaymentModal && (
+        <PaymentModal
+          user={user}
+          onClose={() => setShowPaymentModal(false)}
+          onPaymentSuccess={() => {
+            setShowPaymentModal(false)
+            window.location.reload()
+          }}
+        />
+      )}
     </div>
   )
 }

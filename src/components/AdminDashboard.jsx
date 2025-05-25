@@ -102,15 +102,33 @@ function AdminDashboard({ user }) {
   }
 
   async function handleMediaDeleted(id, type) {
+    console.log("handleMediaDeleted chamado:", { id, type })
+
     if (type === "image") {
-      setImages(images.filter((img) => img.id !== id))
+      setImages((prevImages) => {
+        const newImages = prevImages.filter((img) => img.id !== id)
+        console.log("Imagens atualizadas:", newImages.length)
+        return newImages
+      })
     } else if (type === "video") {
-      setVideos(videos.filter((vid) => vid.id !== id))
+      setVideos((prevVideos) => {
+        const newVideos = prevVideos.filter((vid) => vid.id !== id)
+        console.log("Vídeos atualizados:", newVideos.length)
+        return newVideos
+      })
+    }
+
+    // Recarregar dados para garantir sincronização
+    if (currentDirectory) {
+      setTimeout(() => {
+        fetchImages(currentDirectory.id)
+        fetchVideos(currentDirectory.id)
+      }, 1000)
     }
   }
 
   return (
-    <div className="admin-dashboard">
+    <div className="dashboard-layout">
       <div className="dashboard-sidebar">
         <DirectoryManager
           directories={directories}
@@ -121,34 +139,49 @@ function AdminDashboard({ user }) {
         />
       </div>
 
-      <div className="dashboard-content">
+      <div className="dashboard-main-content">
         {currentDirectory ? (
           <>
-            <h2>Diretório: {currentDirectory.name}</h2>
-            <MediaUploader directoryId={currentDirectory.id} onMediaUploaded={handleMediaUploaded} />
-
-            <div className="media-tabs">
-              <button
-                className={`tab-btn ${activeTab === "images" ? "active" : ""}`}
-                onClick={() => setActiveTab("images")}
-              >
-                Imagens ({images.length})
-              </button>
-              <button
-                className={`tab-btn ${activeTab === "videos" ? "active" : ""}`}
-                onClick={() => setActiveTab("videos")}
-              >
-                Vídeos ({videos.length})
-              </button>
+            <div className="content-header">
+              <h2>Diretório: {currentDirectory.name}</h2>
             </div>
 
-            <MediaGallery
-              media={activeTab === "images" ? images : videos}
-              mediaType={activeTab}
-              isAdmin={true}
-              onMediaDeleted={handleMediaDeleted}
-              userId={user.id}
-            />
+            <div className="admin-content-wrapper">
+              <div className="uploader-section">
+                <MediaUploader
+                  directoryId={currentDirectory.id}
+                  onMediaUploaded={handleMediaUploaded}
+                  userId={user.id}
+                />
+              </div>
+
+              <div className="media-section">
+                <div className="media-tabs">
+                  <button
+                    className={`tab-btn ${activeTab === "images" ? "active" : ""}`}
+                    onClick={() => setActiveTab("images")}
+                  >
+                    Imagens ({images.length})
+                  </button>
+                  <button
+                    className={`tab-btn ${activeTab === "videos" ? "active" : ""}`}
+                    onClick={() => setActiveTab("videos")}
+                  >
+                    Vídeos ({videos.length})
+                  </button>
+                </div>
+
+                <div className="media-content">
+                  <MediaGallery
+                    media={activeTab === "images" ? images : videos}
+                    mediaType={activeTab}
+                    isAdmin={true}
+                    onMediaDeleted={handleMediaDeleted}
+                    userId={user.id}
+                  />
+                </div>
+              </div>
+            </div>
           </>
         ) : (
           <div className="select-directory-message">
