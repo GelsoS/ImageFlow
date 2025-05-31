@@ -32,13 +32,20 @@ function Login({ setView }) {
 
   return (
     <div className="auth-form-container">
-      <h2>Login</h2>
+      <h2>Bem-vindo de volta</h2>
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleLogin} className="auth-form">
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Seu email"
+            required
+          />
         </div>
 
         <div className="form-group">
@@ -48,6 +55,7 @@ function Login({ setView }) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Sua senha"
             required
           />
         </div>

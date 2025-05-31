@@ -4,7 +4,16 @@ import { useEffect } from "react"
 import "../styles/UploadSuccessModal.css"
 
 function UploadSuccessModal({ media, mediaType, onClose }) {
-   return (
+  useEffect(() => {
+    // Auto-fechar após 3 segundos
+    const timer = setTimeout(() => {
+      onClose()
+    }, 6000)
+
+    return () => clearTimeout(timer)
+  }, [onClose])
+
+  return (
     <div className="upload-success-overlay">
       <div className="upload-success-modal">
         <div className="success-icon">✅</div>

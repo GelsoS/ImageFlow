@@ -89,46 +89,57 @@ function MediaGallery({ media, mediaType, isAdmin, onMediaDeleted, userId }) {
       const bucketName = mediaType === "images" ? "images" : "videos"
       const tableName = mediaType === "images" ? "images" : "videos"
 
-      console.log("Iniciando exclusão:", {
-        mediaItem: mediaItem.id,
+      console.log("Iniciando exclusão completa:", {
+        mediaId: mediaItem.id,
         bucketName,
         tableName,
         storagePath: mediaItem.storage_path,
       })
 
-      // 1. Primeiro excluir o arquivo do storage
-      console.log(bucketName,'---',mediaItem.storage_path);
-      
-      const { error: storageError } = await supabase.storage.from(bucketName).remove([mediaItem.storage_path])
+      // 1. Verificar se o arquivo existe no storage antes de tentar excluir
+      const { data: fileExists, error: checkError } = await supabase.storage
+        .from(bucketName)
+        .list(mediaItem.storage_path.split("/")[0], {
+          search: mediaItem.storage_path.split("/")[1],
+        })
 
-      if (storageError) {
-        console.error("Erro ao excluir do storage:", storageError)
-        // Continuar mesmo se houver erro no storage (arquivo pode não existir)
+      console.log("Verificação de arquivo:", { fileExists, checkError })
+
+      // 2. Excluir o arquivo do storage (se existir)
+      if (!checkError && fileExists && fileExists.length > 0) {
+        console.log("Excluindo arquivo do storage...")
+        const { error: storageError } = await supabase.storage.from(bucketName).remove([mediaItem.storage_path])
+
+        if (storageError) {
+          console.error("Erro ao excluir do storage:", storageError)
+          alert(`Erro ao excluir arquivo do storage: ${storageError.message}`)
+          return
+        }
+        console.log("Arquivo excluído do storage com sucesso")
+      } else {
+        console.log("Arquivo não encontrado no storage, continuando...")
       }
 
-      // 2. Depois excluir o registro do banco de dados
-      console.log(tableName,'---',mediaItem.id);
-      
+      // 3. Excluir o registro do banco de dados
+      console.log("Excluindo registro do banco de dados...")
       const { error: dbError } = await supabase.from(tableName).delete().eq("id", mediaItem.id)
 
       if (dbError) {
         console.error("Erro ao excluir do banco:", dbError)
-        throw dbError
+        alert(`Erro ao excluir registro do banco: ${dbError.message}`)
+        return
       }
 
-      console.log("Exclusão bem-sucedida")
+      console.log("Registro excluído do banco com sucesso")
 
-      // 3. Notificar o componente pai para atualizar a lista
+      // 4. Notificar o componente pai para atualizar a lista
       if (onMediaDeleted) {
         onMediaDeleted(mediaItem.id, mediaType.slice(0, -1)) // Remove 's' do final
       }
 
-      // 4. Forçar atualização da página como fallback
-      setTimeout(() => {
-        window.location.reload()
-      }, 1000)
+      alert(`${mediaType === "images" ? "Imagem" : "Vídeo"} excluíd${mediaType === "images" ? "a" : "o"} com sucesso!`)
     } catch (error) {
-      console.error("Erro ao excluir mídia:", error.message)
+      console.error("Erro geral ao excluir mídia:", error.message)
       alert("Erro ao excluir mídia: " + error.message)
     } finally {
       setLoading(false)

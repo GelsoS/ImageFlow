@@ -139,6 +139,29 @@ function UserDashboard({ user }) {
       </div>
 
       <div className="dashboard-main-content">
+        {!currentDirectory && (
+          <div className="upgrade-notification">
+            <div className="upgrade-card">
+              <h3>🚀 Faça Upgrade para Premium!</h3>
+              <p>Obtenha acesso a recursos administrativos completos:</p>
+              <ul>
+                <li>✅ Upload ilimitado de mídias</li>
+                <li>✅ Gerenciamento de diretórios</li>
+                <li>✅ Edição de mídias</li>
+                <li>✅ Relatórios avançados</li>
+              </ul>
+              <button
+                onClick={() => {
+                  // Disparar evento para abrir modal de pagamento
+                  window.dispatchEvent(new CustomEvent("openPaymentModal"))
+                }}
+                className="upgrade-btn-card"
+              >
+                Fazer Upgrade Agora - R$ 9,90/mês
+              </button>
+            </div>
+          </div>
+        )}
         {currentDirectory ? (
           <>
             <div className="content-header">

@@ -62,12 +62,26 @@ function Register({ setView }) {
       <form onSubmit={handleRegister} className="auth-form">
         <div className="form-group">
           <label htmlFor="username">Nome de Usuário</label>
-          <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Escolha um nome de usuário"
+            required
+          />
         </div>
 
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Seu email"
+            required
+          />
         </div>
 
         <div className="form-group">
@@ -77,6 +91,7 @@ function Register({ setView }) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Crie uma senha segura"
             required
             minLength={6}
           />

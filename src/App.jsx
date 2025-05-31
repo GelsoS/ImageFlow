@@ -40,7 +40,17 @@ function App() {
       }
     })
 
-    return () => subscription.unsubscribe()
+    // Listener para abrir modal de pagamento via evento
+    const handleOpenPaymentModal = () => {
+      setShowPaymentModal(true)
+    }
+
+    window.addEventListener("openPaymentModal", handleOpenPaymentModal)
+
+    return () => {
+      subscription.unsubscribe()
+      window.removeEventListener("openPaymentModal", handleOpenPaymentModal)
+    }
   }, [])
 
   async function fetchUserProfile(userId) {
@@ -62,7 +72,6 @@ function App() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    localStorage.clear()
   }
 
   if (loading) {
@@ -72,21 +81,40 @@ function App() {
   if (!session) {
     return (
       <div className="auth-container">
-        {view === "login" ? (
-          <>
-            <Login setView={setView} />
-            <p className="auth-switch">
-              Não tem uma conta? <button onClick={() => setView("register")}>Criar conta</button>
-            </p>
-          </>
-        ) : (
-          <>
-            <Register setView={setView} />
-            <p className="auth-switch">
-              Já tem uma conta? <button onClick={() => setView("login")}>Entrar</button>
-            </p>
-          </>
-        )}
+        {/* Elementos do background */}
+        <div className="trees-left"></div>
+        <div className="trees-right"></div>
+        <div className="flowers"></div>
+        <div className="clouds"></div>
+
+        <div className="auth-content">
+          {/* Seção esquerda com título e botão de troca */}
+          <div className="auth-left-section">
+            <div className="app-logo">
+              <h1>Gerenciador de Imagens</h1>
+              <p className="subtitle">Organize suas memórias com estilo</p>
+            </div>
+
+            <div className="auth-switch">
+              {view === "login" ? (
+                <>
+                  Não tem uma conta?
+                  <button onClick={() => setView("register")}>Criar conta</button>
+                </>
+              ) : (
+                <>
+                  Já tem uma conta?
+                  <button onClick={() => setView("login")}>Entrar</button>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Seção direita com formulário */}
+          <div className="auth-right-section">
+            {view === "login" ? <Login setView={setView} /> : <Register setView={setView} />}
+          </div>
+        </div>
       </div>
     )
   }
@@ -98,11 +126,9 @@ function App() {
         <div className="user-info">
           <span>Olá, {user?.username || session.user.email}</span>
           <div className="header-buttons">
-            {user?.role === "admin" && (
-              <button onClick={() => setShowPaymentModal(true)} className="billing-btn">
-                💳 Cobrança
-              </button>
-            )}
+            <button onClick={() => setShowPaymentModal(true)} className="billing-btn">
+              💳 {user?.role === "admin" ? "Assinatura" : "Fazer Upgrade"}
+            </button>
             <button onClick={handleLogout} className="logout-btn">
               Sair
             </button>

@@ -1,17 +1,281 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.auth-container {
+  width: 100vw;
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  background: linear-gradient(to bottom, #87ceeb 0%, #98d8e8 30%, #90ee90 70%, #228b22 100%);
+}
+
+/* Estrada */
+.auth-container::before {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 100vh;
+  background: linear-gradient(to top, #2f2f2f 0%, #404040 20%, #505050 40%, #606060 60%, #707070 80%, transparent 100%);
+  clip-path: polygon(40% 100%, 60% 100%, 45% 0%, 55% 0%);
+  z-index: 1;
+}
+
+/* Linha central da estrada */
+.auth-container::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 80vh;
+  background: repeating-linear-gradient(to top, #ffd700 0px, #ffd700 30px, transparent 30px, transparent 60px);
+  z-index: 2;
+}
+
+/* Árvores do lado esquerdo */
+.trees-left {
+  position: fixed !important;
+  left: 0;
+  top: 0;
+  width: 35%;
+  height: 100vh;
+  background: radial-gradient(ellipse 80px 120px at 10% 70%, #228b22 0%, #228b22 40%, transparent 41%),
+    radial-gradient(ellipse 60px 100px at 25% 75%, #32cd32 0%, #32cd32 40%, transparent 41%),
+    radial-gradient(ellipse 70px 110px at 15% 60%, #006400 0%, #006400 40%, transparent 41%),
+    radial-gradient(ellipse 90px 130px at 30% 65%, #228b22 0%, #228b22 40%, transparent 41%),
+    radial-gradient(ellipse 50px 80px at 5% 80%, #32cd32 0%, #32cd32 40%, transparent 41%),
+    radial-gradient(ellipse 75px 115px at 20% 50%, #006400 0%, #006400 40%, transparent 41%);
+  z-index: 1;
+}
+
+/* Árvores do lado direito */
+.trees-right {
+  position: fixed !important;
+  right: 0;
+  top: 0;
+  width: 35%;
+  height: 100vh;
+  background: radial-gradient(ellipse 80px 120px at 90% 70%, #228b22 0%, #228b22 40%, transparent 41%),
+    radial-gradient(ellipse 60px 100px at 75% 75%, #32cd32 0%, #32cd32 40%, transparent 41%),
+    radial-gradient(ellipse 70px 110px at 85% 60%, #006400 0%, #006400 40%, transparent 41%),
+    radial-gradient(ellipse 90px 130px at 70% 65%, #228b22 0%, #228b22 40%, transparent 41%),
+    radial-gradient(ellipse 50px 80px at 95% 80%, #32cd32 0%, #32cd32 40%, transparent 41%),
+    radial-gradient(ellipse 75px 115px at 80% 50%, #006400 0%, #006400 40%, transparent 41%);
+  z-index: 1;
+}
+
+/* Flores espalhadas */
+.flowers {
+  position: fixed !important;
+  width: 100%;
+  height: 100vh;
+  background: radial-gradient(circle 8px at 15% 85%, #ff69b4 0%, #ff69b4 50%, transparent 51%),
+    radial-gradient(circle 6px at 12% 82%, #ffb6c1 0%, #ffb6c1 50%, transparent 51%),
+    radial-gradient(circle 7px at 18% 88%, #ff1493 0%, #ff1493 50%, transparent 51%),
+    radial-gradient(circle 8px at 85% 85%, #ff69b4 0%, #ff69b4 50%, transparent 51%),
+    radial-gradient(circle 6px at 88% 82%, #ffb6c1 0%, #ffb6c1 50%, transparent 51%),
+    radial-gradient(circle 7px at 82% 88%, #ff1493 0%, #ff1493 50%, transparent 51%),
+    radial-gradient(circle 5px at 10% 70%, #ffff00 0%, #ffff00 50%, transparent 51%),
+    radial-gradient(circle 6px at 90% 70%, #ffff00 0%, #ffff00 50%, transparent 51%),
+    radial-gradient(circle 4px at 8% 75%, #ffa500 0%, #ffa500 50%, transparent 51%),
+    radial-gradient(circle 5px at 92% 75%, #ffa500 0%, #ffa500 50%, transparent 51%),
+    radial-gradient(circle 6px at 20% 65%, #9370db 0%, #9370db 50%, transparent 51%),
+    radial-gradient(circle 5px at 80% 65%, #9370db 0%, #9370db 50%, transparent 51%);
+  z-index: 2;
+}
+
+/* Nuvens */
+.clouds {
+  position: fixed !important;
+  width: 100%;
+  height: 40%;
+  top: 0;
+  background: radial-gradient(
+      ellipse 120px 40px at 20% 30%,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.8) 50%,
+      transparent 51%
+    ),
+    radial-gradient(
+      ellipse 80px 30px at 25% 32%,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 51%
+    ),
+    radial-gradient(
+      ellipse 100px 35px at 70% 25%,
+      rgba(255, 255, 255, 0.7) 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      transparent 51%
+    ),
+    radial-gradient(
+      ellipse 90px 25px at 75% 27%,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 51%
+    ),
+    radial-gradient(
+      ellipse 110px 45px at 50% 20%,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 51%
+    );
+  z-index: 2;
+  animation: cloudMove 20s infinite linear;
+}
+
+@keyframes cloudMove {
+  0% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(-10px);
+  }
+}
+
+.auth-content {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.auth-left-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.app-logo {
+  margin-bottom: 2rem;
+}
+
+.app-logo h1 {
+  color: white;
+  font-size: 3rem;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+
+.app-logo .subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.3rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.auth-switch {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  font-weight: 500;
+  padding: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-switch button {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #32cd32;
+  color: #228b22;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.auth-switch button:hover {
+  background-color: #32cd32;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(50, 205, 50, 0.4);
+}
+
+.auth-right-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .auth-form-container {
   width: 100%;
+  max-width: 400px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease;
+}
+
+.auth-form-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(to right, #ff69b4, #32cd32, #87ceeb, #ffd700);
 }
 
 .auth-form-container h2 {
   margin-bottom: 1.5rem;
   color: #2c3e50;
   text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .form-group {
@@ -21,39 +285,218 @@
 }
 
 .form-group label {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  color: #555;
+  color: #444;
 }
 
 .form-group input {
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input:focus {
+  border-color: #32cd32;
+  box-shadow: 0 0 0 3px rgba(50, 205, 50, 0.2);
+  outline: none;
+  background-color: white;
 }
 
 .auth-button {
-  background-color: #3498db;
+  background: linear-gradient(135deg, #32cd32, #228b22);
   color: white;
   border: none;
-  padding: 0.8rem;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
-  transition: background-color 0.2s;
+  padding: 1.1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .auth-button:hover {
-  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(50, 205, 50, 0.3);
+  background: linear-gradient(135deg, #228b22, #006400);
+}
+
+.auth-button:active {
+  transform: translateY(0);
 }
 
 .error-message {
-  background-color: #ffebee;
+  background-color: rgba(255, 235, 238, 0.95);
   color: #c62828;
-  padding: 0.8rem;
-  border-radius: 4px;
+  padding: 1rem;
+  border-radius: 8px;
   margin-bottom: 1rem;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-left: 4px solid #c62828;
+}
+
+.error-message::before {
+  content: "⚠️";
+  font-size: 1.2rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .auth-content {
+    max-width: 800px;
+    gap: 2rem;
+  }
+
+  .app-logo h1 {
+    font-size: 2.5rem;
+  }
+
+  .app-logo .subtitle {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .trees-left,
+  .trees-right {
+    width: 30% !important;
+  }
+
+  .auth-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .auth-left-section {
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .app-logo h1 {
+    font-size: 2.2rem;
+  }
+
+  .app-logo .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .auth-switch {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    text-align: center;
+  }
+
+  .auth-form-container {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 0;
+  }
+
+  .auth-content {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .auth-left-section {
+    padding: 0.5rem;
+  }
+
+  .auth-form-container {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .auth-form-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .auth-button {
+    padding: 1rem;
+  }
+
+  .app-logo h1 {
+    font-size: 1.8rem;
+  }
+
+  .app-logo .subtitle {
+    font-size: 1rem;
+  }
+
+  .trees-left,
+  .trees-right {
+    width: 25% !important;
+  }
+
+  .auth-switch {
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .auth-switch button {
+    padding: 0.7rem 1.2rem;
+    font-size: 1rem;
+    margin-top: 0.8rem;
+    display: block;
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Efeito de parallax sutil */
+@media (prefers-reduced-motion: no-preference) {
+  .trees-left {
+    animation: sway 6s ease-in-out infinite;
+  }
+
+  .trees-right {
+    animation: sway 6s ease-in-out infinite reverse;
+  }
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+/* Garantir que todos os elementos sejam visíveis */
+.auth-container > * {
+  pointer-events: auto;
+}
+
+/* Scroll suave se necessário */
+.auth-container {
+  scroll-behavior: smooth;
 }

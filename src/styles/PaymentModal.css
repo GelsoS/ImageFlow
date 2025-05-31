@@ -74,6 +74,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  text-align: left;
 }
 
 .features li {
@@ -81,6 +82,113 @@
   font-size: 0.9rem;
 }
 
+/* Loading subscription */
+.loading-subscription {
+  text-align: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Subscription active */
+.subscription-active {
+  text-align: center;
+}
+
+.active-subscription-info {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.status-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.status-icon.active {
+  color: #fff;
+}
+
+.status-icon.expired {
+  color: #ffc107;
+}
+
+.active-subscription-info h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+}
+
+.subscription-details {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.days-remaining {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.next-payment,
+.payment-method {
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.renewal-info {
+  background-color: #e8f5e8;
+  border: 1px solid #c3e6c3;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Subscription expired */
+.subscription-expired {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.subscription-expired h4 {
+  margin: 0.5rem 0 1rem 0;
+  font-size: 1.3rem;
+}
+
+.subscription-expired p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Payment methods */
 .payment-methods h4 {
   color: #2c3e50;
   margin-bottom: 1rem;
@@ -98,6 +206,11 @@
   transition: all 0.2s;
 }
 
+.payment-method.selected {
+  border-color: #3498db;
+  background-color: #e3f2fd;
+}
+
 .payment-method:hover {
   border-color: #3498db;
   background-color: #f8f9fa;
@@ -105,10 +218,13 @@
 
 .payment-method input[type="radio"] {
   margin-right: 1rem;
-}
-
-.payment-method input[type="radio"]:checked + .method-info {
-  color: #3498db;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 0;
+  height: 0;
+  position: absolute;
+  opacity: 0;
 }
 
 .method-info {
