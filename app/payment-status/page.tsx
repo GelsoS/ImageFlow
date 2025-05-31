@@ -3,7 +3,6 @@
 import { useSearchParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import "../../src/styles/PaymentStatus.css" // Criaremos este CSS
 
 export default function PaymentStatusPage() {
   const searchParams = useSearchParams()
