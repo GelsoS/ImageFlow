@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
 export async function POST(request) {
   try {
@@ -24,7 +24,7 @@ export async function POST(request) {
     }
 
     // Verificar variáveis de ambiente
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
       console.error("Variáveis de ambiente do Supabase não configuradas")
       return NextResponse.json(
         {
@@ -215,7 +215,7 @@ export async function GET() {
     timestamp: new Date().toISOString(),
     env: {
       supabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      supabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     },
   })
 }
