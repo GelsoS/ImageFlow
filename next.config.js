@@ -12,7 +12,7 @@ const nextConfig = {
     MERCADO_PAGO_ACCESS_TOKEN:
       process.env.MERCADO_PAGO_ACCESS_TOKEN ||
       "APP_USR-7230223279813284-052515-6e7a6442e97f296383aafcffd15cddea-140587207",
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY || "re_WCM87L2R_56te2BQwqRvXwSwnmzfjXDtY",
   },
   eslint: {
     ignoreDuringBuilds: true,
