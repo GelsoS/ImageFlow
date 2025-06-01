@@ -6,6 +6,7 @@ import DirectoryManager from "./DirectoryManager"
 import MediaUploader from "./MediaUploader"
 import MediaGallery from "./MediaGallery"
 import AdminDebugPanel from "./AdminDebugPanel"
+import { useDebugPanel } from "../../context/DebugPanelContext"
 import "../styles/Dashboard.css"
 
 function AdminDashboard({ user }) {
@@ -15,7 +16,7 @@ function AdminDashboard({ user }) {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("images")
-  const [showDebugPanel, setShowDebugPanel] = useState(false)
+  const { showDebugPanel } = useDebugPanel();
 
   useEffect(() => {
     fetchDirectories()
@@ -139,25 +140,6 @@ function AdminDashboard({ user }) {
           onDirectoryCreated={handleDirectoryCreated}
           onDirectoryDeleted={handleDirectoryDeleted}
         />
-
-        {/* Botão para mostrar/ocultar debug panel */}
-        <div style={{ marginTop: "1rem", padding: "1rem", borderTop: "1px solid #eee" }}>
-          <button
-            onClick={() => setShowDebugPanel(!showDebugPanel)}
-            style={{
-              background: "#dc3545",
-              color: "white",
-              border: "none",
-              padding: "0.5rem 1rem",
-              borderRadius: "4px",
-              fontSize: "0.8rem",
-              cursor: "pointer",
-              width: "100%",
-            }}
-          >
-            {showDebugPanel ? "Ocultar Debug" : "🔧 Debug Pagamentos"}
-          </button>
-        </div>
       </div>
 
       <div className="dashboard-main-content">

@@ -8,6 +8,7 @@ import Register from "./components/Register"
 import AdminDashboard from "./components/AdminDashboard"
 import UserDashboard from "./components/UserDashboard"
 import PaymentModal from "./components/PaymentModal"
+import { useDebugPanel } from "../context/DebugPanelContext"; // ajuste o caminho se necessário
 
 function App() {
   const [session, setSession] = useState(null)
@@ -15,6 +16,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState("login")
   const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const { showDebugPanel, setShowDebugPanel } = useDebugPanel();
 
   useEffect(() => {
     // Verificar sessão atual
@@ -207,6 +209,24 @@ function App() {
         <h1>Gerenciador de Imagens</h1>
         <div className="user-info">
           <span>Olá, {user?.username || session.user.email}</span>
+           {/* Botão para mostrar/ocultar debug panel */}
+        <div>
+          <button
+            onClick={() => setShowDebugPanel(!showDebugPanel)}
+            style={{
+              background: "rgb(53 134 220)",
+              color: "white",
+              border: "none",
+              padding: "0.5rem 1rem",
+              borderRadius: "4px",
+              fontSize: "0.8rem",
+              cursor: "pointer",
+              width: "100%",
+            }}
+          >           
+            {showDebugPanel ? "Ocultar Debug" : "🔧 Verificar Pagamento"}
+          </button>
+        </div>
           <div className="header-buttons">
             <button onClick={() => setShowPaymentModal(true)} className="billing-btn">
               💳 {user?.role === "admin" ? "Assinatura" : "Fazer Upgrade"}

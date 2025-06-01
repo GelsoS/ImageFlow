@@ -1,5 +1,12 @@
-import App from "../src/App"
+"use client";
+
+import App from "../src/App";
+import { DebugPanelProvider } from "../context/DebugPanelContext"; // ajuste o caminho se necessário
 
 export default function Page() {
-  return <App />
+  return (
+    <DebugPanelProvider>
+      <App />
+    </DebugPanelProvider>
+  );
 }

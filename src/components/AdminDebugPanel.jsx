@@ -5,7 +5,7 @@ import { supabase } from "../supabaseClient"
 import "../styles/AdminDebugPanel.css"
 
 function AdminDebugPanel({ user }) {
-  const [paymentId, setPaymentId] = useState("113535423120")
+  const [paymentId, setPaymentId] = useState("")
   const [loading, setLoading] = useState(false)
   const [validating, setValidating] = useState(false)
   const [validationResult, setValidationResult] = useState(null)
@@ -287,7 +287,7 @@ function AdminDebugPanel({ user }) {
       <div className="debug-section">
         <h4>✅ Ativar Sua Assinatura</h4>
         <p>
-          <strong>Insira o ID do seu pagamento PIX aprovado:</strong>
+          <strong>Insira o ID do seu pagamento aprovado:</strong>
         </p>
 
         <div className="payment-check">
@@ -337,7 +337,7 @@ function AdminDebugPanel({ user }) {
           </button>
         </div>
 
-        <div className="payment-info">
+        {/* <div className="payment-info">
           <h5>🔍 Validação em 3 Etapas:</h5>
           <ul>
             <li>
@@ -367,7 +367,7 @@ function AdminDebugPanel({ user }) {
             <li>✅ Edição de mídias</li>
             <li>✅ Relatórios avançados</li>
           </ul>
-        </div>
+        </div> */}
 
         {result && (
           <div className={`result ${result.success ? "success" : "error"}`}>
