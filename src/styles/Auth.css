@@ -333,6 +333,83 @@ body {
   }
 }
 
+/* Adicionar estilos para a confirmação de email */
+.email-confirmation {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.email-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s infinite alternate;
+}
+
+.email-confirmation h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.email-confirmation p {
+  color: #666;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.email-confirmation strong {
+  color: #228b22;
+  word-break: break-all;
+}
+
+.confirmation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.login-redirect-btn {
+  background: linear-gradient(135deg, #32cd32, #228b22);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-redirect-btn:hover {
+  background: linear-gradient(135deg, #228b22, #006400);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(50, 205, 50, 0.3);
+}
+
+.resend-btn {
+  background: transparent;
+  color: #3498db;
+  border: 1px solid #3498db;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resend-btn:hover {
+  background: #e3f2fd;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
 /* Responsividade */
 @media (max-width: 1024px) {
   .auth-content {
