@@ -62,11 +62,93 @@ function App() {
         throw error
       }
 
+      console.log("User profile fetched:", data)
+
+      // Verificar se o usuário tem assinatura ativa
+      await checkAndUpdateSubscriptionStatus(userId, data)
+
       setUser(data)
     } catch (error) {
       console.error("Erro ao buscar perfil:", error.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function checkAndUpdateSubscriptionStatus(userId, currentUser) {
+    try {
+      // Buscar assinatura ativa do usuário
+      const { data: subscriptions, error } = await supabase
+        .from("subscriptions")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(1)
+
+      if (error) {
+        console.error("Erro ao buscar assinatura:", error)
+        return
+      }
+
+      const activeSubscription = subscriptions && subscriptions.length > 0 ? subscriptions[0] : null
+
+      if (activeSubscription) {
+        const endDate = new Date(activeSubscription.end_date)
+        const now = new Date()
+        const isExpired = endDate <= now
+
+        if (isExpired) {
+          // Assinatura expirou - rebaixar para user
+          console.log("Assinatura expirada, rebaixando usuário")
+          await handleExpiredSubscription(activeSubscription.id, userId)
+        } else if (currentUser.role !== "admin") {
+          // Tem assinatura ativa mas não é admin - promover
+          console.log("Usuário tem assinatura ativa, promovendo para admin")
+          await supabase
+            .from("profiles")
+            .update({
+              role: "admin",
+              subscription_status: "premium",
+              subscription_end_date: activeSubscription.end_date,
+            })
+            .eq("id", userId)
+        }
+      } else if (currentUser.role === "admin") {
+        // Não tem assinatura ativa mas é admin - rebaixar
+        console.log("Usuário admin sem assinatura ativa, rebaixando")
+        await supabase
+          .from("profiles")
+          .update({
+            role: "user",
+            subscription_status: "none",
+            subscription_end_date: null,
+          })
+          .eq("id", userId)
+      }
+    } catch (error) {
+      console.error("Erro ao verificar status da assinatura:", error)
+    }
+  }
+
+  async function handleExpiredSubscription(subscriptionId, userId) {
+    try {
+      // Marcar assinatura como expirada
+      await supabase.from("subscriptions").update({ status: "expired" }).eq("id", subscriptionId)
+
+      // Rebaixar usuário para role "user"
+      await supabase
+        .from("profiles")
+        .update({
+          role: "user",
+          subscription_status: "expired",
+          subscription_end_date: null,
+        })
+        .eq("id", userId)
+
+      console.log("Usuário rebaixado para role 'user' devido à assinatura expirada")
+    } catch (error) {
+      console.error("Erro ao processar assinatura expirada:", error)
     }
   }
 
@@ -146,7 +228,8 @@ function App() {
           onClose={() => setShowPaymentModal(false)}
           onPaymentSuccess={() => {
             setShowPaymentModal(false)
-            window.location.reload()
+            // Recarregar perfil do usuário após pagamento bem-sucedido
+            fetchUserProfile(session.user.id)
           }}
         />
       )}

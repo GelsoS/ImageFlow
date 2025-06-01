@@ -43,6 +43,41 @@
   font-weight: 600;
 }
 
+.processing-message {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.processing-message p {
+  margin: 0;
+  color: #1976d2;
+  font-weight: 500;
+}
+
 .status-message {
   color: #666;
   font-size: 1.1rem;
@@ -79,6 +114,8 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border: none;
+  cursor: pointer;
 }
 
 .home-button:hover {
