@@ -101,6 +101,20 @@ function Register({ setView }) {
           {loading ? "Criando conta..." : "Criar Conta"}
         </button>
       </form>
+      <div className="contact-info">
+        <div className="contact-divider">
+          <span>Precisa de ajuda?</span>
+        </div>
+        <div className="whatsapp-contact">
+          <span className="whatsapp-icon">📱</span>
+          <div className="contact-details">
+            <strong>Gelso Schwertz</strong>
+            <a href="https://wa.me/5549991765460" target="_blank" rel="noopener noreferrer" className="whatsapp-link">
+              (49) 99176-5460
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

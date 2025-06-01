@@ -24,33 +24,6 @@ body {
   background: linear-gradient(to bottom, #87ceeb 0%, #98d8e8 30%, #90ee90 70%, #228b22 100%);
 }
 
-/* Estrada */
-.auth-container::before {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  height: 100vh;
-  background: linear-gradient(to top, #2f2f2f 0%, #404040 20%, #505050 40%, #606060 60%, #707070 80%, transparent 100%);
-  clip-path: polygon(40% 100%, 60% 100%, 45% 0%, 55% 0%);
-  z-index: 1;
-}
-
-/* Linha central da estrada */
-.auth-container::after {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 80vh;
-  background: repeating-linear-gradient(to top, #ffd700 0px, #ffd700 30px, transparent 30px, transparent 60px);
-  z-index: 2;
-}
-
 /* Árvores do lado esquerdo */
 .trees-left {
   position: fixed !important;
@@ -499,4 +472,94 @@ body {
 /* Scroll suave se necessário */
 .auth-container {
   scroll-behavior: smooth;
+}
+
+/* Seção de contato */
+.contact-info {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.contact-divider {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.contact-divider span {
+  color: #666;
+  font-size: 0.9rem;
+  background-color: white;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.contact-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e0e0e0;
+  z-index: -1;
+}
+
+.whatsapp-contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  border-radius: 12px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-contact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-icon {
+  font-size: 1.5rem;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.contact-details strong {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.whatsapp-link {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.whatsapp-link:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
+/* Responsividade para contato */
+@media (max-width: 480px) {
+  .whatsapp-contact {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .contact-details {
+    align-items: center;
+  }
 }
