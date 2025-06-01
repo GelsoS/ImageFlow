@@ -2,7 +2,7 @@
 
 import { Suspense } from "react"
 import PaymentStatusContent from "./PaymentStatusContent"
-import "../../src/styles/PaymentStatus.css"
+//import "../../src/styles/PaymentStatus.css"
 
 function PaymentStatusLoading() {
   return (
