@@ -166,8 +166,8 @@
   }
 
   .dashboard-sidebar {
-    height: auto;
-    max-height: 300px;
+   /*  height: auto; */
+    max-height: 600px;
   }
 
   .dashboard-main-content {
@@ -268,8 +268,11 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
+  .upgrade-notification{
+    padding: 0;
+  }
   .upgrade-card {
-    margin: 1rem;
+   /*  margin: 1rem; */
     padding: 1.5rem;
   }
 

@@ -51,7 +51,7 @@ button:disabled {
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+/*   align-items: center; */
   flex-shrink: 0;
 }
 
@@ -62,7 +62,6 @@ button:disabled {
 
 .user-info {
   display: flex;
-  align-items: center;
   gap: 1rem;
 }
 
@@ -107,14 +106,18 @@ button:disabled {
 .app-main {
   flex: 1;
   padding: 1rem;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
+  .app-main {
+    display: block;
+    padding: 0;
+  }
   .app-header {
     flex-direction: column;
-    gap: 1rem;
+    /* gap: 1rem; */
     text-align: center;
   }
 
